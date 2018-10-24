@@ -2,7 +2,7 @@
 """
 Created on Wed Oct 24 06:05:57 2018
 
-@author: Mikko, modified by Tommi Honkanen
+@author: Mikko Pohja, modified by Tommi Honkanen
 """
 
 import os

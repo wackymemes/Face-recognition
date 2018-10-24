@@ -2,7 +2,7 @@
 """
 Created on Wed Oct 24 04:19:09 2018
 
-@author: Mikko
+@author: Mikko Pohja
 """
 import os
 import sys
