@@ -24,6 +24,7 @@ enrolled_faces = {}
 
 # Semaphor for identifying thread
 identifying = False
+successes = 0
 
 def face_to_vector(image, face):
   return (
@@ -66,8 +67,9 @@ def identify(image):
   return enroll_identifiers[closest_index], distances[closest_index]
 
 
-def handle_frame(origFrame, cb):
+def handle_frame(origFrame, cb, name):
   #global identifying
+  global successes
   try:
     frame = cv2.resize(origFrame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_CUBIC)
 
@@ -75,6 +77,8 @@ def handle_frame(origFrame, cb):
     identifier, distance = identify(frame)
     if (distance < 0.6):
        cb(identifier, distance, time.time() - start)
+       if identifier == name:
+           successes +=1
     else:
        cb('-', distance, time.time() - start)
     sys.stdout.flush()
@@ -170,10 +174,16 @@ def main():
         print('Loading enrolled faces from faces.npy')
         load_enrolled_faces()
 
+    tries = 0
     for filename in glob.glob('test_faces/*.jpg'):
         
+        tries += 1
         print('Testing', filename)
+        name = filename.split('/')[0].split('.')[0]
+        name = name.split('\\')[1]
+        
         image = image_from_file(filename)
-        handle_frame(image, logger)
+        handle_frame(image, logger, name)
 
+    print('The accuracy of the test was', successes/tries * 100, 'percent.')
 main()
